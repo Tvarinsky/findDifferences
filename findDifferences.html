@@ -1,0 +1,81 @@
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <title>Поиск отличий</title>
+    </head>
+
+    <style>
+      img {
+        max-width: 100%;
+        left: 0;
+        top: 0;
+        position: absolute;
+        mix-blend-mode: difference;
+      }
+      #imageContainer {
+        position: relative;
+      }
+    </style>
+    <body style="background-color: #101010">
+      <div
+        id="alertify"
+        style="
+          position: fixed;
+          z-index: 10;
+          right: 5%;
+          bottom: 2%;
+          padding: 20px;
+          background: #151515;
+          color: #eee;
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        "
+      >
+        Вставьте изображение (CTRL + V)
+      </div>
+      <div
+        style="
+          text-align: center;
+          max-width: 50%;
+          margin-left: 35%;
+          margin-top: 10%;
+        "
+        id="imageContainer"
+      ></div>
+
+      <script>
+        var imageContainer = document.getElementById("imageContainer");
+
+        function handlePasteEvent(event) {
+          var items = (event.clipboardData || event.originalEvent.clipboardData)
+            .items;
+
+          for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+
+            if (item.type.indexOf("image") === 0) {
+              var blob = item.getAsFile();
+              var imageUrl = URL.createObjectURL(blob);
+
+              var img = document.createElement("img");
+              img.src = imageUrl;
+              img.style.clip = "rect(0, 50%, 100%, 0)";
+
+              var img2 = document.createElement("img");
+              img2.src = imageUrl;
+              img2.style.left = "-50%";
+
+              var container = document.createElement("div");
+              container.appendChild(img);
+              container.appendChild(img2);
+
+              imageContainer.appendChild(container);
+            }
+
+            document.getElementById("alertify").innerHTML = "Успех";
+          }
+        }
+
+        document.addEventListener("paste", handlePasteEvent);
+      </script>
+    </body>
+  </html>
